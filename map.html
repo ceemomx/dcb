@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html>
+<head><title></title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport"
+          content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no,minimal-ui">
+    <meta name="format-detection" content="telephone=no">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            text-decoration: none;
+            list-style: none;
+        }
+
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            font-family: "Hiragino Sans GB", "华文细黑", "STHeiti", "微软雅黑", "Microsoft YaHei", SimHei, "Helvetica Neue", Helvetica, Arial, sans-serif !important;;
+        }
+
+        body {
+            padding: 15px;
+            box-sizing: border-box;
+            background-size: cover
+        }
+        p {
+            line-height:25px;
+            font-size:14px;
+        }
+        span {
+            font-size:12px;
+        }
+        ul {
+            padding-top:10px;
+        }
+        ul li {
+            padding:5px 0;
+            border-bottom:1px solid #eee;
+            overflow:hidden;
+        }
+        ul li a {
+            color:#555;
+            font-size:16px;
+        }
+
+    </style>
+</head>
+<body>
+<h2>avabcd.com网址导航</h2>
+<p>记得收藏avabcd.com</p>
+<p>某些网址可能已经失效,如果遇见某个网站打不开可以试试其他网站</p>
+<span id="count"></span>
+<ul id="list">
+    <li></li>
+</ul>
+</body>
+<script>
+    Ajax = function () {
+        function request(opt) {
+            function fn() {
+            }
+
+            var url = opt.url || "";
+            var async = opt.async !== false, method = opt.method || 'GET', data = opt.data
+                    || null, success = opt.success || fn, error = opt.failure
+                    || fn;
+            method = method.toUpperCase();
+            if (method == 'GET' && data) {
+                var args = "";
+                if (typeof data == 'string') {
+                    //alert("string")
+                    args = data;
+                } else if (typeof data == 'object') {
+                    //alert("object")
+                    var arr = new Array();
+                    for (var k in data) {
+                        var v = data[k];
+                        arr.push(k + "=" + v);
+                    }
+                    args = arr.join("&");
+                }
+                url += (url.indexOf('?') == -1 ? '?' : '&') + args;
+                data = null;
+            }
+            var xhr = window.XMLHttpRequest ? new XMLHttpRequest()
+                    : new ActiveXObject('Microsoft.XMLHTTP');
+            xhr.onreadystatechange = function () {
+                _onStateChange(xhr, success, error);
+            };
+            xhr.open(method, url, async);
+            if (method == 'POST') {
+                xhr.setRequestHeader('Content-type',
+                        'application/x-www-form-urlencoded;');
+            }
+            xhr.send(data);
+            return xhr;
+        }
+
+        function _onStateChange(xhr, success, failure) {
+            if (xhr.readyState == 4) {
+                var s = xhr.status;
+                if (s >= 200 && s < 300) {
+                    success(xhr);
+                } else {
+                    failure(xhr);
+                }
+            } else {
+            }
+        }
+
+        return {
+            request: request
+        };
+    }();
+
+    Ajax.request({
+        url: 'http://107.170.248.54:3000/web.json',
+        success: function (xhr) {
+            console.log(xhr.responseText);
+            var nb = '';
+            var list = JSON.parse(xhr.responseText);
+            Object.keys(list).forEach(function (item) {
+                nb += '<li><a href="http://' + item + '" target="_blank">' + item + '</a></li>';
+            });
+            document.getElementById('list').innerHTML = nb;
+            document.getElementById('count').innerHTML = '已更新至' + Object.keys(list).length + '个网站';
+        },
+        error: function (xhr) {
+
+        }
+    });
+</script>
+<script>
+    (function (i, s, o, g, r, a, m) {
+        i['GoogleAnalyticsObject'] = r;
+        i[r] = i[r] || function () {
+                    (i[r].q = i[r].q || []).push(arguments)
+                }, i[r].l = 1 * new Date();
+        a = s.createElement(o),
+                m = s.getElementsByTagName(o)[0];
+        a.async = 1;
+        a.src = g;
+        m.parentNode.insertBefore(a, m)
+    })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
+
+    ga('create', 'UA-39153796-9', 'auto');
+    ga('send', 'pageview');
+
+</script>
+</html>
