@@ -11,6 +11,7 @@
             padding: 0;
             text-decoration: none;
             list-style: none;
+            font-weight:200;
         }
 
         html, body {
@@ -21,41 +22,109 @@
         }
 
         body {
-            padding: 15px;
             box-sizing: border-box;
             background-size: cover
+            padding-bottom:15px;
         }
-        p {
+        .pd-v {
+            padding:0 15px;
+        }
+        div.intro {
+            padding:10px 15px;
+            background:#776b5d;
+            color:#fff;
+        }
+        p.intro {
             line-height:25px;
             font-size:14px;
         }
-        span {
+        span.intro {
             font-size:12px;
         }
-        ul {
-            padding-top:10px;
+        ul.tags {
+            height:60px;
         }
-        ul li {
-            padding:5px 0;
-            border-bottom:1px solid #eee;
+        ul.tags li {
+            box-sizing:border-box;
+            width:33.3333%;
+            display:block;
+            height:40px;
+            line-height:41px;
+            color:#fff;
+            font-size:14px;
+            text-align:center;
+            background:#f47564;
+            float:left;
+            border-right:1px solid #fff;
+            position:relative;
+        }
+        ul.tags li:last-child {
+            border-right:0;
+        }
+
+        ul.tags li i {
+            display:none;
+            width:12px;
+            height:12px;
+            position:absolute;
+            bottom:-6px;
+            left:0;
+            right:0;
+            margin:0 auto;
+            background:#f47564;
+            transform:rotate(45deg);
+        }
+        ul.tags li.selected i {
+            display:block;
+        }
+
+        ul.list {
+            /*padding-top:10px;*/
+        }
+        ul.list li {
+            padding:5px 15px;
+            border-top:1px solid #eee;
             overflow:hidden;
         }
-        ul li a {
-            color:#555;
+        ul.list li:nth-child(even) {
+            background:#f7f7f7;
+        }
+
+        ul.list li a {
+            display:block;
+            padding:5px 0;
+            color:#f47564;
             font-size:16px;
+        }
+        ul.list li p {
+            color:#999;
+            font-size:12px;
+            font-weight:200;
+        }
+        ul.list li p b {
+            color:#777;
+            font-weight:200;
         }
 
     </style>
 </head>
 <body>
-<h2>avabcd.com网址导航</h2>
-<p>记得收藏avabcd.com</p>
-<p>某些网址可能已经失效,如果遇见某个网站打不开可以试试其他网站</p>
-<span id="count"></span>
-<ul id="list">
-    <li></li>
+<div class="intro">
+    <h3 class="title">avabcd.com网址导航</h3>
+    <p class="intro">记得收藏avabcd.com</p>
+    <p class="intro">某些网址可能已经失效,如果遇见某个网站打不开可以试试其他网站</p>
+    <span class="intro">已更新至{{count}}个网站</span>
+</div>
+<ul class="tags">
+    <li :class="{selected:type == 'all'}" @click="change('all','')"><i></i>全部</li>
+    <li :class="{selected:type == 'hot'}" @click="change('hot','hot')"><i></i>最热</li>
+    <li :class="{selected:type == 'new'}" @click="change('new','updateAt')"><i></i>最新</li>
+</ul>
+<ul class="list" id="list">
+    <li v-for="(key, val) in list | orderBy condition -1"><a v-href="http://' + key + '" target="_blank">{{key}}<p>热度:<b>{{val.hot}}</b></p></a></li>
 </ul>
 </body>
+<script src="vue.min.js"></script>
 <script>
     Ajax = function () {
         function request(opt) {
@@ -115,17 +184,34 @@
         };
     }();
 
+    var map = new Vue({
+        el:'body',
+        data:{
+            list:{},
+            count:0,
+            type:'all',
+            condition:''
+        },
+        methods: {
+            change: function(a,b){
+                this.type = a;
+                this.condition = b;
+            }
+        }
+    });
+
     Ajax.request({
         url: 'http://107.170.248.54:3000/web.json',
         success: function (xhr) {
-            console.log(xhr.responseText);
-            var nb = '';
+//            var nb = '';
             var list = JSON.parse(xhr.responseText);
-            Object.keys(list).forEach(function (item) {
-                nb += '<li><a href="http://' + item + '" target="_blank">' + item + '</a></li>';
-            });
-            document.getElementById('list').innerHTML = nb;
-            document.getElementById('count').innerHTML = '已更新至' + Object.keys(list).length + '个网站';
+            map.list = list;
+//            Object.keys(list).forEach(function (item) {
+//                nb += '<li><a href="http://' + item + '" target="_blank">' + item + '<p>热度:<b>' + list[item].hot+ '</b></p></a></li>';
+//            });
+            map.count = Object.keys(list).length;
+//            document.getElementById('list').innerHTML = nb;
+//            document.getElementById('count').innerHTML = '已更新至' + Object.keys(list).length + '个网站';
         },
         error: function (xhr) {
 
