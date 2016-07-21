@@ -124,7 +124,7 @@
     <li :class="{selected:type == 'new'}" @click="change('new','updateAt')"><i></i>最新</li>
 </ul>
 <ul class="list" id="list">
-    <li v-for="(key, val) in list | orderBy condition -1"><a v-href="http://' + key + '" target="_blank">{{key}}<p>热度:<b>{{val.hot}}</b></p></a></li>
+    <li v-for="(key, val) in list | orderBy condition -1"><a href="http://{{key}}" target="_blank">{{key}}<p>热度:<b>{{val.hot}}</b></p></a></li>
 </ul>
 </body>
 <script src="vue.min.js"></script>
