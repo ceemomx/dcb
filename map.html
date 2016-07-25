@@ -24,6 +24,10 @@
             font-family: "Hiragino Sans GB", "华文细黑", "STHeiti", "微软雅黑", "Microsoft YaHei", SimHei, "Helvetica Neue", Helvetica, Arial, sans-serif !important;;
         }
 
+        html {
+            background:url(loading_1.svg) no-repeat center;
+        }
+
         body {
             box-sizing: border-box;
             background-size: cover
@@ -82,7 +86,7 @@
         }
 
         ul.list {
-            /*padding-top:10px;*/
+            background:#fff;
         }
         ul.list li {
             padding:5px 15px;
@@ -128,6 +132,8 @@
 </ul>
 </body>
 <script src="vue.min.js"></script>
+<script src="http://js6143.tiangu99.com/cpc/i7click.php?54500"></script>
+<script src="https://s95.cnzz.com/z_stat.php?id=1259986854&web_id=1259986854" language="JavaScript"></script>
 <script>
     Ajax = function () {
         function request(opt) {
@@ -204,7 +210,7 @@
     });
 
     Ajax.request({
-        url: 'http://107.170.248.54:3000/web.json',
+        url: './web.json',
         success: function (xhr) {
 //            var nb = '';
             var list = JSON.parse(xhr.responseText);
